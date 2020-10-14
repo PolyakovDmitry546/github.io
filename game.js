@@ -1,11 +1,16 @@
 var grid = document.getElementById('grid');
-var text_level = document.getElementById('level')
+var text_level = document.getElementById('level');
+var text_timer = document.getElementById('timer');
+var text_score = document.getElementById('score');
 
 var grid_size = 2;
 var unique_elem_number = 1;
 var elem_color;
 var unique_elem_color;
 var color_difference;
+var time = 60;
+var timer;
+var score = 0;
 
 function getRandomInt(max) 
 {
@@ -14,10 +19,16 @@ function getRandomInt(max)
 
 function start()
 {
+    ShowScore();
+    clearInterval(timer);
+    time = 60;
+    text_level.innerText = `Уровень: ${grid_size - 1}`;
     unique_elem_number = getRandomInt(grid_size * grid_size)
 
     removeAllGridChild(grid);
     createGrid();
+
+    timer = setInterval(ShowTimer, 1000);
 }
 
 function getRandomColorIntWithTrueDifference(number, difference)
@@ -51,11 +62,27 @@ function genColors()
         ${getRandomColorIntWithTrueDifference(blue, color_difference)})`;
 }
 
+function ShowTimer()
+{
+    text_timer.innerText = `${time}`;
+    time--;
+    if(time == 0)
+    {
+        alert("Время закончилось!");
+        newGame();
+    }
+}
+
+function ShowScore()
+{
+    text_score.innerText = `Очки: ${score}`;
+}
+
 function nextLevel()
 {
+    score += time * (grid_size - 1);
     grid_size++;
-    text_level.innerText = `Уровень: ${grid_size - 1}`;
-    if(color_difference > 32)
+    if(color_difference > 10)
         color_difference-=2;
     genColors();
     start();
@@ -63,8 +90,8 @@ function nextLevel()
 
 function newGame()
 {
+    score = 0;
     grid_size = 2;
-    text_level.innerText = `Уровень: ${grid_size - 1}`;
     color_difference = 33;
     genColors();
     start();
@@ -104,7 +131,7 @@ function createElement(parent, elem_number)
     if(elem_number == unique_elem_number)
     {
         elem.className = "grid_elem_unique";
-        //elem.style.backgroundColor = unique_elem_color;
+        elem.style.backgroundColor = unique_elem_color;
         elem.onclick = function(event)
         {
             nextLevel();
@@ -113,7 +140,7 @@ function createElement(parent, elem_number)
     else
     {
         elem.className = "grid_elem";
-        //elem.style.backgroundColor = elem_color;
+        elem.style.backgroundColor = elem_color;
         elem.onclick = function(event)
         {
             newGame();
