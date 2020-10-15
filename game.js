@@ -12,6 +12,16 @@ var time = 60;
 var timer;
 var score = 0;
 
+document.addEventListener('keydown', function(event) {
+    if (event.code == 'KeyQ' && event.ctrlKey) 
+    {
+        var temp = `rgb(${255},${0},${0})`;
+        var unique_elem = document.getElementById('unique_elem');
+        unique_elem.style.backgroundColor = temp;
+        setTimeout(()=>unique_elem.style.backgroundColor = unique_elem_color, 50);
+    }
+});
+
 function getRandomInt(max) 
 {
     return Math.floor(Math.random() * Math.floor(max));
@@ -66,7 +76,7 @@ function ShowTimer()
 {
     text_timer.innerText = `${time}`;
     time--;
-    if(time == 0)
+    if(time == -2)
     {
         alert("Время закончилось!");
         newGame();
@@ -131,6 +141,7 @@ function createElement(parent, elem_number)
     if(elem_number == unique_elem_number)
     {
         elem.className = "grid_elem_unique";
+        elem.id = "unique_elem";
         elem.style.backgroundColor = unique_elem_color;
         elem.onclick = function(event)
         {
